@@ -32,5 +32,5 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  pry-debugger (~> 0.2.2)
-  rspec (~> 2.14.0)
+  pry-debugger
+  rspec (~> 2.14.1)
