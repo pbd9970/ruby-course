@@ -18,3 +18,10 @@
 # Credit to SundaySalsa on codewars.com for coming
 # up with this problem.
 
+class Lucky
+  self.check(str)
+    raise if str[0] == nil
+    str = str.split('').map { |x| x.to_i }
+    split_point = str.size / 2
+    str[0..split_point - 1].inject(:+) == str[-split_point..-1].inject(:+)
+end
