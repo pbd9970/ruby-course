@@ -1,5 +1,5 @@
 require 'honkr'
-require 'pry-byebug'
+require 'pry-debugger'
 
 RSpec.configure do |config|
   config.before(:each) do
