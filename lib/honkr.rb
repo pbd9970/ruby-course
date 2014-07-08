@@ -8,6 +8,9 @@ module Honkr
   end
 end
 
+require 'digest/sha1'
+require 'ostruct'
+
 require_relative './honkr/databases/in_memory.rb'
 require_relative './honkr/databases/sql.rb'
 
