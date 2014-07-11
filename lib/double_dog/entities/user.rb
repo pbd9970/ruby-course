@@ -15,6 +15,14 @@ module DoubleDog
       @password == pass
     end
 
+    def self.valid_username?(username)
+      username != nil && username.length >= 3
+    end
+
+    def self.valid_password?(password)
+      password != nil && password.length >= 3
+    end
+
     def admin?
       !!@admin
     end
