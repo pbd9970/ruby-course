@@ -10,6 +10,7 @@ end
 
 require 'digest/sha1'
 require 'ostruct'
+require 'active_record'
 
 require_relative './honkr/databases/in_memory.rb'
 require_relative './honkr/databases/sql.rb'

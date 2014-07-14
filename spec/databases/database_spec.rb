@@ -1,4 +1,4 @@
-require 'spec_helper'
+require './spec_helper'
 
 shared_examples 'a database' do
 

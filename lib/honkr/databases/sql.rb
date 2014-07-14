@@ -2,49 +2,46 @@ module Honkr
   module Databases
     class SQL
 
-      def initialize
-        @honks = {}
-        @honks_counter = 0
-        @users = {}
-        @users_counter = 0
+      class User < ActiveRecord::Base
+        has_many :honks
+      end
+
+      class Honk < ActiveRecord::Base
+        belongs_to :user
       end
 
       def persist_honk(honk)
-        new_id = (@honks_counter += 1)
         attrs = {
-          :id => new_id,
           :user_id => honk.user_id,
           :content => honk.content
         }
         # Save the new honk data in the database (in this case, a hash)
-        @honks[new_id] = attrs
+        ar_honk = Honk.create(attrs)
 
         # Add the new id to the honk object
-        honk.instance_variable_set("@id", new_id)
+        honk.instance_variable_set("@id", ar_honk.id)
       end
 
       def get_honk(id)
-        attrs = @honks[id]
-        Honk.new(attrs[:id], attrs[:user_id], attrs[:content])
+        ar_honk = Honk.find(id)
+        Honkr::Honk.new(ar_honk[:id], ar_honk[:user_id], ar_honk[:content])
       end
 
       def persist_user(user)
-        new_id = (@users_counter += 1)
         attrs = {
-          :id => new_id,
-          :username => user.username,
+          :name => user.username,
           :password_digest => user.password_digest
         }
         # Save the new user data in the database (in this case, a hash)
-        @users[new_id] = attrs
+        ar_user = User.create(attrs)
 
-        # Add the new id to the user object
-        user.instance_variable_set("@id", new_id)
+        # Add the new id to the honk object
+        user.instance_variable_set("@id", ar_user.id)
       end
 
       def get_user(id)
-        attrs = @users[id]
-        User.new(attrs[:id], attrs[:username], attrs[:password])
+        ar_user = User.find(id)
+        Honkr::User.new(ar_user[:id], ar_user[:name], ar_user[:password_digest])
       end
 
     end
