@@ -12,6 +12,10 @@ module DoubleDog
     end
   end
 end
+
+
+
+
 #    def run(params)
 #      result = validate_session(params[:session_id])
 #      if result[:success?]
@@ -23,6 +27,7 @@ end
 #
 #      new_user = DoubleDog.db.create_user(:username => params[:username], :password => params[:password])
 #      return success(:user => user)
+#      end
 #    end
 #  end
 #end

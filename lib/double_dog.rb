@@ -1,4 +1,5 @@
 require 'pry-debugger'
+require 'active_record'
 
 module DoubleDog
   def self.db
@@ -6,11 +7,13 @@ module DoubleDog
   end
 end
 
+
 require_relative 'double_dog/entities/item.rb'
 require_relative 'double_dog/entities/user.rb'
 require_relative 'double_dog/entities/order.rb'
 
 require_relative 'double_dog/database/in_memory.rb'
+require_relative 'double_dog/database/database.rb'
 
 require_relative 'double_dog/use_cases/transaction_script.rb'
 require_relative 'double_dog/use_cases/authentication.rb'
