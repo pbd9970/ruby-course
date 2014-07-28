@@ -13,7 +13,7 @@ module DoubleDog
       end
 
       class Order < ActiveRecord::Base
-        has_many :items
+        has_many :items, through :order_items
       end
 
       def clear_everything
@@ -43,31 +43,34 @@ module DoubleDog
       def get_user_by_session_id(sid)
         ar_session = Session.find(sid)
         return nil unless session
-        ar_user = User.find(ar_session.user_id)
+        user_id = @sessions[sid][:user_id]
+        user_attrs = @users[user_id]
+        User.new(user_attrs[:id], user_attrs[:username], user_attrs[:password], user_attrs[:admin])
         DoubleDog::User.new(ar_user.id, ar_user.username, ar_user.password, ar_user.admin)
       end
 
       def get_user_by_username(username)
-        ar_user = User.find_by(username: username)
-        return nil unless ar_user
+        user_attrs = @users.values.find { |attrs|  == username }
+        return nil if user_attrs.nil?
+        User.new(user_attrs[:id], user_attrs[:username], user_attrs[:password], user_attrs[:admin])
         DoubleDog::User.new(ar_user.id, ar_user.username, ar_user.password, ar_user.admin)
       end
 
       def create_item(attrs)
-        item = DoubleDog::Item.new(nil, attrs[:name], attrs[:price])
-        ar_item = Item.create(attrs)
-        item.instance_variable_set("@id", ar_item.id)
+        new_id = (@item_id_counter += 1)
+        @items[new_id] = attrs
+        attrs[:id] = new_id
+        Item.new(attrs[:id], attrs[:name], attrs[:price])
       end
 
       def get_item(id)
-        ar_item = Item.find(id)
-        DoubleDog::Item.new(ar_item.id, ar_item.name, ar_item.price)
+        attrs = @items[id]
+        Item.new(attrs[:id], attrs[:name], attrs[:price])
       end
 
       def all_items
-        items = Item.all
-        items.map do |ar_item|
-          Item.new(ar_item.id, ar_item.name, ar_item.price)
+        @items.values.map do |attrs|
+          Item.new(attrs[:id], attrs[:name], attrs[:price])
         end
       end
 
@@ -75,18 +78,17 @@ module DoubleDog
         new_id = (@order_id_counter += 1)
         @orders[new_id] = attrs
         attrs[:id] = new_id
-        DoubleDog::Order.new(ar_order.id, ar_order.employee_id, ar_order.items)
+        Order.new(attrs[:id], attrs[:employee_id], attrs[:items])
       end
 
       def get_order(id)
-        ar_order = Order.find(id)
-        DoubleDog::Order.new(ar_order.id, ar_order.employee_id, ar_order.items)
+        attrs = @orders[id]
+        Order.new(attrs[:id], attrs[:employee_id], attrs[:items])
       end
 
       def all_orders
-        order = Order.all
-        orders.map do |ar_order|
-          DoubleDog::Order.new(ar_order.id, ar_order.employee_id, ar_order.items)
+        @orders.values.map do |attrs|
+          Order.new(attrs[:id], attrs[:employee_id], attrs[:items])
         end
       end
     end
